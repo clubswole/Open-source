@@ -1,46 +1,31 @@
-<!DOCTYPE html>
-
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="Week2.css">
-    <link rel="stylesheet" href=
-"https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link rel="stylesheet" href=
-"https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap">
-    <title>Weather App</title>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="stylesheet" href="Week2.css">
+ <title>Weather App</title>
 </head>
-
 <body>
-    <div class="container">
-        <div class="weather-card">
-            <h3>
-                Weather App
-            </h3>
-            <input type="text" id="city-input"
-                placeholder="Enter city name">
-            <button id="city-input-btn"
-                    onclick="weatherFn($('#city-input').val())">
-                    Get Weather
-            </button>
-            <div id="weather-info"
-                class="animate__animated animate__fadeIn">
-                <h3 id="city-name"></h3>
-                <p id="date"></p>
-                <img id="weather-icon" src="{`https://openweathermap.org/img/wn/${weather.data.weather[0].icon}@2x.png`}" alt="Weather Icon">
-                <p id="temperature"></p>
-                <p id="description"></p>
-                <p id="wind-speed"></p>
-            </div>
-        </div>
-    </div>
-    <script src=
-"https://code.jquery.com/jquery-3.6.0.min.js">
-    </script>
-    <script src=
-"https://momentjs.com/downloads/moment.min.js">
-    </script>
-    <script src="Week2.js"></script>
-</body>
+ <div class="card">
+  <div class="search">
+   <input type="text" class="search-bar" placeholder="Search">
+   <button><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1.5em" width="1.5em" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.442 10.442a1 1 0 011.415 0l3.85 3.85a1 1 0 01-1.414 1.415l-3.85-3.85a1 1 0 010-1.415z" clip-rule="evenodd"></path><path fill-rule="evenodd" d="M6.5 12a5.5 5.5 0 100-11 5.5 5.5 0 000 11zM13 6.5a6.5 6.5 0 11-13 0 6.5 6.5 0 0113 0z" clip-rule="evenodd"></path></svg></button>
+  </div>
 
+  <div class="weather loading">
+   <h1 class="city">Weather in Lagos</h1>
+   <h1 class="temp">51°C</h1>
+   <div class="flex">
+    <img src="//cdn.weatherapi.com/weather/64x64/day/116.png" alt="" class="icon">
+    <div class="description">Cloudy</div>
+   </div>
+   <div class="humidity">Humidity:60%</div>
+   <div class="wind">Wind Speed:6.2 km/hr</div>
+  </div>
+ </div>
+
+ <script src="Week2.js"></script>
+
+</body>
 </html>
