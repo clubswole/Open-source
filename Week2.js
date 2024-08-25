@@ -1,40 +1,68 @@
-const url =
-    'https://api.openweathermap.org/data/2.5/weather';
-const apiKey =
-    'f00c38e0279b7bc85480c3fe775d518c';
+let cityEl = document.querySelector(".city");
 
-$(document).ready(function () {
-    weatherFn('Pune');
+let iconEl = document.querySelector(".icon");
+
+let descriptionEl = document.querySelector(".description");
+
+let temperatureEl = document.querySelector(".temp");
+
+let humidityEl = document.querySelector(".humidity");
+
+let windEl = document.querySelector(".wind");
+
+let searchBar = document.querySelector(".search-bar");
+
+let searchEl = document.querySelector(".search button");
+
+let weatherEl = document.querySelector(".weather");
+
+let weather = {
+ "apikey": "a6f6fef1470f473cb0694459230605",
+
+ fetchWeather: function (city) {
+  fetch("http://api.weatherapi.com/v1/current.json?key=a6f6fef1470f473cb0694459230605%20&q=" + city + "&aqi=no").then((response) => response.json()).then((data) => this.displayWeather(data));
+ },
+
+ displayWeather: function (data) {
+  const { name } = data.location;
+
+  const { icon, text } = data.current.condition;
+
+  const { temp_c, humidity } = data.current;
+
+  const { wind_kph } = data.current;
+
+  cityEl.innerText = `Weather in ${name}`;
+
+  iconEl.src = icon;
+
+  descriptionEl.innerText = text;
+
+  temperatureEl.innerText = `Temperature: ${temp_c}°C`;
+
+  humidityEl.innerText = `Humidity: ${humidity}%`;
+
+  windEl.innerText = `Wind Speed: ${wind_kph} km/hr`;
+
+  weatherEl.classList.remove("loading");
+
+  document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + name + "')";
+ },
+
+ search: function () {
+  this.fetchWeather(searchBar.value);
+ }
+};
+
+searchEl.addEventListener("click", () => {
+ console.log("Clicked!");
+ weather.search();
 });
 
-async function weatherFn(cName) {
-    const temp =
-        `${url}?q=${cName}&appid=${apiKey}&units=metric`;
-    try {
-        const res = await fetch(temp);
-        const data = await res.json();
-        if (res.ok) {
-            weatherShowFn(data);
-        } else {
-            alert('City not found. Please try again.');
-        }
-    } catch (error) {
-        console.error('Error fetching weather data:', error);
-    }
-}
+searchBar.addEventListener("keyup", (event) => {
+ if (event.key === "Enter") {
+  weather.search();
+ }
+});
 
-function weatherShowFn(data) {
-    $('#city-name').text(data.name);
-    $('#date').text(moment().
-        format('MMMM Do YYYY, h:mm:ss a'));
-    $('#temperature').
-        html(`${data.main.temp}°C`);
-    $('#description').
-        text(data.weather[0].description);
-    $('#wind-speed').
-        html(`Wind Speed: ${data.wind.speed} m/s`);
-    $('#weather-icon').
-        attr('src',
-            `...`);
-    $('#weather-info').fadeIn();
-}
+weather.fetchWeather("Lagos");
