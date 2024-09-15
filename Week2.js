@@ -1,69 +1,35 @@
-let cityEl = document.querySelector(".city");
+var map = L.map('map').setView([18.234495538526822, 75.68806044166344], 8); // Default coordinates
 
-let iconEl = document.querySelector(".icon");
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(map);
 
-let descriptionEl = document.querySelector(".description");
+function getDirections() {
+    var destinationInput = document.getElementById("destinationInput").value;
 
-let temperatureEl = document.querySelector(".temp");
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var userLat = position.coords.latitude;
+            var userLon = position.coords.longitude;
+            
+            // Use a geocoding service to convert the entered location into coordinates
+            var geocodingUrl = "https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURI(destinationInput);
 
-let humidityEl = document.querySelector(".humidity");
-
-let windEl = document.querySelector(".wind");
-
-let searchBar = document.querySelector(".search-bar");
-
-let searchEl = document.querySelector(".search button");
-
-let weatherEl = document.querySelector(".weather");
-
-let weather = {
- "apikey": "a6f6fef1470f473cb0694459230605",
-
- fetchWeather: function (city) {
-  fetch("http://api.weatherapi.com/v1/current.json?key=a6f6fef1470f473cb0694459230605%20&q=" + city + "&aqi=no").then((response) => response.json()).then((data) => this.displayWeather(data));
- },
-
- displayWeather: function (data) {
-  const { name } = data.location;
-
-  const { icon, text } = data.current.condition;
-
-  const { temp_c, humidity } = data.current;
-
-  const { wind_kph } = data.current;
-
-  cityEl.innerText = `Weather in ${name}`;
-
-  iconEl.src = icon;
-
-  descriptionEl.innerText = text;
-
-  temperatureEl.innerText = `Temperature: ${temp_c}°C`;
-
-  humidityEl.innerText = `Humidity: ${humidity}%`;
-
-  windEl.innerText = `Wind Speed: ${wind_kph} km/hr`;
-
-  weatherEl.classList.remove("loading");
-
-  document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + name + "')";
- },
-
- search: function () {
-  this.fetchWeather(searchBar.value);
- }
-};
-
-searchEl.addEventListener("click", () => {
- console.log("Clicked!");
- weather.search();
-});
-
-searchBar.addEventListener("keyup", (event) => {
- if (event.key === "Enter") {
-  weather.search();
- }
-});
-
-weather.fetchWeather("Lagos");
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://weatherwidget.io/js/widget.min.js';fjs.parentNode.insertBefore(js,fjs);}}(document,'script','weatherwidget-io-js');
+            fetch(geocodingUrl)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    var selectedCoords = [data[0].lat, data[0].lon];
+                    var url = "https://www.openstreetmap.org/directions?engine=osrm_car&route=" + userLat + "%2C" + userLon + "%3B" + selectedCoords[0] + "%2C" + selectedCoords[1];
+                    window.location.href = url;
+                } else {
+                    alert("Destination not found");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Error getting destination coordinates");
+            });
+        });
+    } else {
+        alert("Geolocation is not supported by your browser");
+    }
+}
